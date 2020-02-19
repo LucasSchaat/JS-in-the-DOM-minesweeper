@@ -38,10 +38,17 @@ table {
 td {
     height: 20px;
     width: 20px;
-    background: blue;
+    background: gray;
 }
 
 .mine {
     background: green;
+}
+
+.notClicked {
+    overflow: hidden;
+    background: #cac8c8;
+    color: transparent;
+    box-shadow: 1px 1px #0000007c;
 }
 
