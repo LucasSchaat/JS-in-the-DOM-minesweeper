@@ -124,3 +124,12 @@ td {
 .lost {
     background-color: red;
 }
+
+.wrong {
+    background-image: url(./thumbs_down.png);
+    background-size: auto 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: transparent;
+    box-shadow: none;
+}

@@ -412,7 +412,8 @@ function clickEvent() {
 	} else if (square.innerText === "*") {
 		square.classList.remove("notClicked");
 		square.classList.add("lost");
-		alert("You lose!");
+        alert("You lose!");
+    
 		for (let i = 0; i < matrix * matrix; i++) {
             let eachSquare = document.getElementsByClassName(`${i}`);
             eachSquare = eachSquare[0]
@@ -420,6 +421,14 @@ function clickEvent() {
         }
         mines.forEach(mine => {
             document.getElementsByClassName(mine)[0].classList.remove('notClicked')
+            document.getElementsByClassName(mine)[0].classList.remove('flagged')
+        })
+        flagged.forEach(flag => {
+            console.log(document.getElementsByClassName(flag)[0].classList.contains('mine'))
+            if (!document.getElementsByClassName(flag)[0].classList.contains('mine')){
+                document.getElementsByClassName(flag)[0].classList.add('wrong')
+                document.getElementsByClassName(flag)[0].classList.remove('notClicked')
+            }
         })
 	} else if (square.innerText === "0") {
         square.innerText = " ";
@@ -687,16 +696,17 @@ function rightClick(){
     square = square[0]
     if(!square.classList.contains('question') && !square.classList.contains('flagged')) {
         square.classList.add('flagged')
+        flagged.push(square.classList[0])
         square.removeEventListener("click", clickEvent);
     } else if (square.classList.contains('flagged')) {
         square.classList.toggle('flagged')
+        flagged.splice(square.classList[0], 1)
         square.classList.add('question')
         square.removeEventListener("click", clickEvent);
     } else {
         square.classList.toggle('question')
         square.addEventListener("click", clickEvent);
     }
-    console.log('hit')
 }
 
 function checkWinner() {
