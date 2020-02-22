@@ -1,4 +1,4 @@
-const landing = document.querySelector('.start-button-box')
+const landing = document.querySelector('.landing-menu')
 const board = document.getElementsByTagName('table')
 let firstMove = true
 let matrix
@@ -7,9 +7,14 @@ let flagged = []
 let clicks = 0
 let restarting = false
 let id
+let time = 0
 
 function clicked(number) {
-    matrix = number
+    if(number !== 0){
+        matrix = number
+    } else {
+        restarting = true
+    }
     id = 0
 
     if(!restarting){
@@ -39,7 +44,18 @@ function clicked(number) {
             document.getElementsByClassName(i)[0].classList.remove('mine')
             document.getElementsByClassName(i)[0].classList.remove('flagged')
             document.getElementsByClassName(i)[0].classList.remove('question')
+            document.getElementsByClassName(i)[0].classList.remove('lost')
+            document.getElementsByClassName(i)[0].classList.remove('wrong')
+            document.querySelector('.face-box').classList.remove('winner')
+            document.querySelector('.face-box').classList.remove('dead')
+            document.querySelector('.face-box').classList.add('in-game')
+            console.log(document.getElementsByClassName(i)[0].classList)
+            flagged = []
+            time = 0
+            document.querySelector('.timer').innerText = '000';
+            clicks = 0
             id = matrix * matrix
+            firstMove = true
         }
     }
 
@@ -66,6 +82,8 @@ function clicked(number) {
             }
         }
     }
+
+    document.querySelector(".counter").innerText = `0${mines.length}`;
     
     let noMines = []
     for(let i = 0; i < matrix * matrix; i++){
@@ -148,276 +166,336 @@ function clickEvent() {
     let square = document.getElementsByClassName(`${event.srcElement.classList[0]}`)
     square = square[0]
 	if (firstMove === true) {
-		firstMove = false;
+        firstMove = false;
+        console.log('restarting timer')
+        timer()
 		if (square.innerText === "*") {
-			alert(
-				`Happy Birthday! You chose a mine on your first try making you very unlucky. Good news, I won't let you lose like this on your first try, so choose another square!`
-			);
+            firstMove = true
+            clearInterval(begin)
+            time = 0
+			alert(`Happy Birthday! You chose a mine on your first try making you very unlucky. Good news, I won't let you lose like this on your first try, so choose another square!`);
 		} else if (square.innerText === "0"){
             square.innerText = " ";
             let currentId = +square.classList[0]
             if (currentId === 0) {
-                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+                console.log(!document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged'))
+                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId === matrix - 1) {
-                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId === matrix * (matrix - 1)) {
-                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId === matrix * matrix - 1) {
-                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId / matrix < 1) {
-                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId % matrix === 0) {
-                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId % matrix === matrix - 1) {
-                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else if (currentId / matrix > matrix - 1) {
-                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
             } else {
-                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                 }
-                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                     }
                     }
-                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                     }
-                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                     }
                     }
-                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                     }
                     }
-                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                     }
                     }
-                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                     }
                     }
-                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+                if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                     document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                    document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                     if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                         document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                     }
                     }
             }
+            square.classList.remove("notClicked");
+            square.removeEventListener("contextmenu", rightClick);
         } else {
             square.classList.remove("notClicked");
+            square.removeEventListener("contextmenu", rightClick);
         }
 	} else if (square.innerText === "*") {
 		square.classList.remove("notClicked");
-		square.classList.add("lost");
+		square.removeEventListener("contextmenu", rightClick);
+        square.classList.add("lost");
+        clearInterval(begin)
+        if (time < 10) {
+            document.querySelector(".timer").innerText = `00${time}`;
+        } else if (time < 100) {
+            document.querySelector(".timer").innerText = `0${time}`;
+        } else {
+            document.querySelector(".timer").innerText = time;
+        }
+        time = 0
+        document.querySelector('.face-box').classList.toggle('in-game')
+        document.querySelector('.face-box').classList.add('dead')
         alert("You lose!");
     
 		for (let i = 0; i < matrix * matrix; i++) {
             let eachSquare = document.getElementsByClassName(`${i}`);
             eachSquare = eachSquare[0]
 			eachSquare.removeEventListener("click", clickEvent);
+			eachSquare.removeEventListener("contextmenu", rightClick);
         }
         mines.forEach(mine => {
             document.getElementsByClassName(mine)[0].classList.remove('notClicked')
@@ -434,258 +512,300 @@ function clickEvent() {
         square.innerText = " ";
         let currentId = +square.classList[0]
         if (currentId === 0) {
-            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId === matrix - 1) {
-            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId === matrix * (matrix - 1)) {
-            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId === matrix * matrix - 1) {
-            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId / matrix < 1) {
-            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
                 if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId % matrix === 0) {
-            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId % matrix === matrix - 1) {
-            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else if (currentId / matrix > matrix - 1) {
-            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         } else {
-            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - matrix + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix - 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix - 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix - 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix - 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix - 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix)[0].dispatchEvent(new Event("click"))
                 }
                 }
-            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*"){
+            if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText !== "*" && !document.getElementsByClassName(currentId + matrix + 1)[0].classList.contains('flagged')){
                 document.getElementsByClassName(currentId + matrix + 1)[0].classList.remove("notClicked")
+                document.getElementsByClassName(currentId + matrix + 1)[0].removeEventListener("contextmenu", rightClick)
             if (document.getElementsByClassName(currentId + matrix + 1)[0].innerText === "0"){
                     document.getElementsByClassName(currentId + matrix + 1)[0].dispatchEvent(new Event("click"))
                 }
                 }
         }
 		square.classList.remove("notClicked");
+		square.removeEventListener("contextmenu", rightClick);
 	} else {
 		square.classList.remove("notClicked");
+		square.removeEventListener("contextmenu", rightClick);
     }
     checkWinner()
 };
@@ -700,12 +820,21 @@ function rightClick(){
         square.removeEventListener("click", clickEvent);
     } else if (square.classList.contains('flagged')) {
         square.classList.toggle('flagged')
-        flagged.splice(square.classList[0], 1)
+        let index = flagged.indexOf(square.classList[0])
+        flagged.splice(index, 1)
         square.classList.add('question')
         square.removeEventListener("click", clickEvent);
     } else {
         square.classList.toggle('question')
         square.addEventListener("click", clickEvent);
+    }
+    console.log(mines.length)
+    console.log(flagged.length)
+    let count = mines.length - flagged.length
+    if (count < 10) {
+        document.querySelector('.counter').innerText = `00${count}`
+    } else {
+        document.querySelector('.counter').innerText = `0${count}`
     }
 }
 
@@ -717,14 +846,47 @@ function checkWinner() {
         }
     }
     if (clicks === matrix * matrix - mines.length){
-        document.querySelector(".winner").style.visibility = "visible";
+        document.querySelector(".face-box").classList.toggle("in-game");
+        document.querySelector(".face-box").classList.add("winner");
+        for (let i = 0; i < matrix * matrix; i++) {
+            let eachSquare = document.getElementsByClassName(`${i}`);
+            eachSquare = eachSquare[0]
+			eachSquare.removeEventListener("click", clickEvent);
+			eachSquare.removeEventListener('contextmenu', rightClick);
+        }
+        clearInterval(begin)
+        if (time < 10) {
+            document.querySelector(".timer").innerText = `00${time}`;
+        } else if (time < 100) {
+            document.querySelector(".timer").innerText = `0${time}`;
+        } else {
+            document.querySelector(".timer").innerText = time;
+        }
+        time = 0
     }
-    console.log(clicks)
-    console.log('checking for a winner')
 }
 
 function restart(){
-    restarting = true
+    restarting = false
     landing.style.visibility = "visible";
-    document.querySelector('.winner').style.visibility = "hidden"
+    let rows = document.querySelectorAll('tr')
+    for (let i=0; i<rows.length; i++){
+        rows[i].parentNode.removeChild(rows[i])
+    }
+}
+
+function timer(){
+    begin = setInterval(() => {
+        console.log('new timer')
+        if (time < 999) {
+            time+=1
+            if (time < 10){
+                document.querySelector(".timer").innerText = `00${time}`;
+            } else if (time < 100) {
+                document.querySelector(".timer").innerText = `0${time}`;
+            } else {
+                document.querySelector('.timer').innerText = time;
+            }
+        }
+    }, 1000)
 }

@@ -5,28 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css?family=Squada+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" rel="stylesheet">
     <link rel='stylesheet' href='styles.css'>
     <title>Document</title>
 </head>
 <body>
     <div class='application'>
-        <h1>Minesweeper</h1>
+        <h1 id='title'>Minesweeper Clasico</h1>
         <div class="stats-box">
-            <div class="counter">099</div>
-            <div class="face-box happy dead"></div>
-            <div class="timer">101</div>
+            <div class="counter"></div>
+            <div onclick="clicked(0)" class="face-box in-game"></div>
+            <div class="timer">000</div>
         </div>
         <table></table>
-        <div class='wrong'></div>
+        <button onclick="restart()" class='to-landing'>Choose New Level</button>
     </div>
-    <div class='start-button-box'>
-        <button onclick="clicked(9)">Beginner</button>
-        <button onclick="clicked(16)">Intermediate</button>
-        <button onclick="clicked(24)">Expert</button>
-    </div>
-    <div class='winner'>
-        <h1>CONGRATS YOU WIN!</h1>
-        <button onclick="restart()">New Game</button>
+    <div class='landing-menu'>
+        <h1 class='title'>Minesweeper Clasico</h1>
+        <div class='start-box'>
+            <p>Choose a level to begin</p>
+            <div class='button-box'>
+                <button onclick="clicked(9)">Beginner</button>
+                <button onclick="clicked(16)">Intermediate</button>
+                <button onclick="clicked(24)">Expert</button>
+            </div>
+        </div>
     </div>
 </body>
 <script src="./index.js"></script>

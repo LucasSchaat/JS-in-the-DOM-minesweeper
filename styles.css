@@ -5,8 +5,8 @@
 }
 
 body {
-    height: 500px;
-    width: 500px;
+    height: 100vh;
+    width: 100%;
 }
 
 .application {
@@ -16,20 +16,50 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: scroll;
 }
 
-.start-button-box {
-    height: 500px;
-    width: 500px;
-    background: aquamarine;
+.landing-menu {
+    height: 100%;
+    width: 100%;
+    background: whitesmoke;
     position: absolute;
     top: 0;
     left: 0;
-    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Ubuntu";
+}
+
+.title {
+    font-size: 60px;
+    margin-bottom: 50px;
+}
+
+.start-box {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    padding: 20px 0;
     align-items: center;
+    height: 300px;
+    width: 100%;
+    background: #dddcdc;
+    margin-bottom: 30px;
+}
+
+.start-box > p {
+    font-size: 24px;
+}
+
+button {
+    font-family: "Ubuntu";
+    font-size: 18px;
+    width: 200px;
+    margin: 0 20px;
+    height: 
 }
 
 table {
@@ -44,11 +74,17 @@ td {
     background: #dddcdc;
 }
 
+#title {
+    font-family: "Ubuntu";
+    margin: 20px 0;
+}
+
 .stats-box {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     width: 350px;
     padding: 0 80px;
+    margin-bottom: 5px;
 }
 
 .counter {
@@ -64,14 +100,28 @@ td {
     height: 30px;
     width: 30px;
     background: #dddcdc;
+    box-shadow: 2px 2px black;
 }
 
-.happy {
-    
+.in-game {
+    background-image: url(./assets/minesweeper_in_game.png);
+    background-position: center;
+    background-size: auto 70%;
+    background-repeat: no-repeat;
 }
 
 .dead {
-    
+    background-image: url(./assets/minesweeper_dead.png);
+    background-position: center;
+    background-size: auto 70%;
+    background-repeat: no-repeat;
+}
+
+.winner {
+    background-image: url(./assets/minesweeper_winner.png);
+    background-position: center;
+    background-size: auto 70%;
+    background-repeat: no-repeat;
 }
 
 .timer {
@@ -83,9 +133,9 @@ td {
     text-align: center;
 }
 
-/* .mine {
-    background: #dddcdc;
-} */
+.mine {
+    font-weight: bolder;
+}
 
 .notClicked {
     overflow: hidden;
@@ -95,41 +145,31 @@ td {
 }
 
 .flagged {
-    background-image: url('./flag_image.png');
+    background-image: url('./assets/flag_image.png');
     background-size: cover;
 }
 
 .question {
-    background-image: url('./question_mark.png');
+    background-image: url('./assets/question_mark.png');
     background-size: auto 70%;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.winner {
-    position: absolute;
-    height: 500px;
-    width: 500px;
-    visibility: hidden;
-    top: 0;
-    left: 0;
-    padding: 60px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    background: aquamarine;
-}
 
 .lost {
     background-color: red;
 }
 
 .wrong {
-    background-image: url(./thumbs_down.png);
+    background-image: url(./assets/thumbs_down.png);
     background-size: auto 70%;
     background-position: center;
     background-repeat: no-repeat;
     color: transparent;
     box-shadow: none;
+}
+
+.to-landing {
+    margin-top: 10px;
 }
