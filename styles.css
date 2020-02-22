@@ -59,7 +59,7 @@ button {
     font-size: 18px;
     width: 200px;
     margin: 0 20px;
-    height: 
+    min-height: 26px;
 }
 
 table {
@@ -69,20 +69,20 @@ table {
 }
 
 td {
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     background: #dddcdc;
 }
 
 #title {
     font-family: "Ubuntu";
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .stats-box {
     display: flex;
     justify-content: space-between;
-    width: 350px;
+    width: 330px;
     padding: 0 80px;
     margin-bottom: 5px;
 }
@@ -170,6 +170,11 @@ td {
     box-shadow: none;
 }
 
+.restart-button-box {
+    height: 50px;
+}
+
 .to-landing {
     margin-top: 10px;
+    margin-bottom: 10px;
 }
